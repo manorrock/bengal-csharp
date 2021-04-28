@@ -1,0 +1,6 @@
+object HelloWorld {
+
+    native helloWorld() {
+        Console.WriteLine("Hello World");
+    }
+}
