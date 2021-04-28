@@ -1,4 +1,3 @@
-## Bengal Message to C# compiler
-### by Manorrock.com
+## Bengal Message to C# transpiler
 
-This project delivers you the Bengal Message to C# compiler.
+This project delivers you the Bengal Message to C# transpiler.
