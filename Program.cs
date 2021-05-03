@@ -28,11 +28,40 @@ namespace bmesg2csharp
         //
         // Convert to nodes.
         //
-        static List<Object> ConvertToNodes(String inputString)
+        static List<INode> ConvertToNodes(String inputString)
         {
             return inputString
                 .Select(character => new CharacterNode(character))
-                .ToList<Object>();
+                .ToList<INode>();
+        }
+
+        //
+        // Phase 1 - convert "object" to KeywordNode
+        //
+        static List<INode> Phase1(List<INode> inputList)
+        {
+            List<INode> result = new List<INode>();
+            KeywordNode keyword = new KeywordNode("object");
+            String candidate = "";
+            foreach (var node in inputList)
+            {
+                candidate = candidate + node.ToString();
+                if (!keyword.GetKeyword().StartsWith(candidate))
+                {
+                    result.AddRange(ConvertToNodes(candidate));
+                    candidate = "";
+                }
+                else if (candidate.Equals(keyword.GetKeyword()))
+                {
+                    result.Add(keyword);
+                    candidate = "";
+                }
+            }
+            if (candidate.Length > 0)
+            {
+                result.AddRange(ConvertToNodes(candidate));
+            }
+            return result;
         }
 
         //
@@ -45,7 +74,8 @@ namespace bmesg2csharp
             string destinationFilename = sourceFile;
             destinationFilename = destinationFilename.Substring(0, destinationFilename.LastIndexOf("."));
             destinationFilename = destinationFilename + ".cs";
-            List<Object> nodes = ConvertToNodes(sourceContent);
+            List<INode> nodes = ConvertToNodes(sourceContent);
+            nodes = Phase1(nodes);
             if (nodes.Count > 0)
             {
                 FileStream fileStream = new FileStream(destinationFilename, FileMode.Create);

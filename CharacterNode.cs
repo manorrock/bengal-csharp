@@ -1,7 +1,7 @@
 
 namespace bmesg2csharp
 {
-    class CharacterNode {
+    class CharacterNode : INode {
 
         private char character;
 
